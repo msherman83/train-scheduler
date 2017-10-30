@@ -18,14 +18,15 @@ var database = firebase.database();
 
 // Button for adding trains to the display.
 
-$("#add-employee-btn").on("click", function () {
+$("#add-train-btn").on("click", function () {
     event.preventDefault();
 
     var trainName = $("#train-name-input").val().trim();
     var destination = $("#destination-input").val().trim();
-    var firstTrain = moment($("#first-train-input").val().trim(), "DD/MM/YY").format("X");
+    var firstTrain = moment($("#first-train-input").val().trim(), "HH:mm").format("HH:mm");
     var frequency = $("#frequency-input").val().trim();
 
+    console.log(firstTrain);
     // Creates local "temporary" object for holding train data
     var train = {
         name: trainName,
@@ -41,7 +42,7 @@ $("#add-employee-btn").on("click", function () {
     console.log(train.name);
     console.log(train.destination);
     console.log(train.firstTrain);
-    console.log(train.frequncy);
+    console.log(train.frequency);
     // Alert
     alert("You've added some trains, son!");
     // Clears all of the text-boxes
@@ -58,7 +59,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
     var trainName = childSnapshot.val().name;
     var destination = childSnapshot.val().destination;
     var firstTrain = childSnapshot.val().firstTrain;
-    var frequency = childSnapshot.val().frequncy;
+    var frequency = childSnapshot.val().frequency;
     // Employee Info
     console.log(trainName);
     console.log(destination);
