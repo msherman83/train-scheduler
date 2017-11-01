@@ -1,7 +1,4 @@
 // TO DO
-// Initialize firebase.
-// 
-
 
 // Firebase engaged 
 var config = {
@@ -16,6 +13,24 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
+
+// Updating time live on page in header
+
+var datetime = null,
+date = null;
+
+var timeUpdate = function () {
+date = moment(new Date())
+datetime.html(date.format('dddd, MMMM Do YYYY, h:mm:ss a'));
+};
+
+$(document).ready(function(){
+datetime = $('#current-time')
+timeUpdate();
+setInterval(timeUpdate, 1000);
+});
+
+
 // Button for adding trains to the display.
 
 $("#add-train-btn").on("click", function () {
@@ -23,8 +38,8 @@ $("#add-train-btn").on("click", function () {
 
     var trainName = $("#train-name-input").val().trim();
     var destination = $("#destination-input").val().trim();
-    var firstTrain = moment($("#first-train-input").val().trim(), "HH:mm").format("HH:mm");
-    var frequency = $("#frequency-input").val().trim();
+    var firstTrain = moment($("#first-train-input").val().trim(), "HH:mm").format("HH:mm a");
+    var frequency = moment($("#frequency-input").val().trim(), "hh:mm").format("hh:mm");
 
     console.log(firstTrain);
     // Creates local "temporary" object for holding train data
@@ -50,6 +65,7 @@ $("#add-train-btn").on("click", function () {
     $("#destination-input").val("");
     $("#first-train-input").val("");
     $("#frequency-input").val("");
+
 });
 
 // 3. Create Firebase event for adding train to the database and a row in the html when a user adds an entry
@@ -60,11 +76,25 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
     var destination = childSnapshot.val().destination;
     var firstTrain = childSnapshot.val().firstTrain;
     var frequency = childSnapshot.val().frequency;
+
+
+    // TRAIN MATH CHAOS ======================================
+    
+    // Store current time in variable
+    var currentTime = moment().format('h:mm:ss a'); 
+    // Take first train time and add frequency to it to get Next Arrival.
+    var nextArrival = moment().add(frequency, 'm').format('HH:mm');
+
+    // Take next arrival and subtract current time to get minutes away.
+
     // Employee Info
     console.log(trainName);
     console.log(destination);
     console.log(firstTrain);
     console.log(frequency);
+    console.log(currentTime);
+    console.log(nextArrival);
+    
     // Prettify the employee start
     // var empStartPretty = moment.unix(empStart).format("MM/DD/YY");
 
