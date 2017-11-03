@@ -38,9 +38,9 @@ $("#add-train-btn").on("click", function () {
 
     var trainName = $("#train-name-input").val().trim();
     var destination = $("#destination-input").val().trim();
-    var firstTrain = moment($("#first-train-input").val().trim(), "HH:mm").format("HH:mm a");
-    var frequency = moment($("#frequency-input").val().trim(), "hh:mm").format("hh:mm");
-
+    var firstTrain = moment($("#first-train-input").val().trim(), "HH:mm").format("HH:mm");
+    var frequency = $("#frequency-input").val().trim();
+    console.log(frequency);
     console.log(firstTrain);
     // Creates local "temporary" object for holding train data
     var train = {
@@ -79,35 +79,33 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
 
 
     // TRAIN MATH CHAOS ======================================
-    
-    // Store current time in variable
-    var currentTime = moment().format('h:mm:ss a'); 
-    // Take first train time and add frequency to it to get Next Arrival.
-    var nextArrival = moment().add(frequency, 'm').format('HH:mm');
 
-    // Take next arrival and subtract current time to get minutes away.
+    // Store current time in variables
+    var currentTime = moment();
+    var timeInput = moment(childSnapshot.val().firstTrain, 'HH:mm');
+    var trainTime = moment(timeInput).format('HH:mm');
+
+    // Difference between times
+    var trainTimeDifference = moment(trainTime, 'HH:mm');
+    var trainDifference = moment().diff(moment(trainTimeDifference), 'minutes');
+
+    // Remained of the time
+    var trainRemainder = trainDifference % frequency;
+
+    // Minutes until next train
+    var minutesAway = frequency - trainRemainder;
+
+    // Next train
+    var nextTrain = moment().add(minutesAway, 'minutes');
+
 
     // Employee Info
     console.log(trainName);
     console.log(destination);
     console.log(firstTrain);
     console.log(frequency);
-    console.log(currentTime);
-    console.log(nextArrival);
-    
-    // Prettify the employee start
-    // var empStartPretty = moment.unix(empStart).format("MM/DD/YY");
-
-    // Calculate the months worked using hardcore math
-    // To calculate the months worked
-    // var empMonths = moment().diff(moment.unix(empStart, "X"), "months");
-    // console.log(empMonths);
-
-    // Calculate the total billed rate
-    // var empBilled = empMonths * empRate;
-    // console.log(empBilled);
 
     // Add each train's data into the table
     $("#train-table > tbody").append("<tr><td>" + trainName + "</td><td>" + destination + "</td><td>" +
-    frequency + "</td><td>" + firstTrain + "</td><td>" + firstTrain + "</td></tr>");
+    frequency + "</td><td>" + moment(nextTrain).format("hh:mm a") + "</td><td>" + minutesAway + "</td></tr>");
   });
