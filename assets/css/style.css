@@ -1,0 +1,27 @@
+body {
+    background-image: url(../img/train_background.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Arvo', serif;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    line-height: 1.5
+}
+
+h1 {
+    font-weight: bold;
+}
+
+#current-time {
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.jumbotron {
+    background: rgba(255, 254, 254, 0.6);
+}
+
+.panel-heading {
+    background-color: black;
+    color: white;
+}

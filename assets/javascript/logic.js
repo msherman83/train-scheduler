@@ -99,7 +99,7 @@ database.ref().on("child_added", function(childSnapshot, prevChildKey) {
     var nextTrain = moment().add(minutesAway, 'minutes');
 
 
-    // Employee Info
+    // Train variable console logs
     console.log(trainName);
     console.log(destination);
     console.log(firstTrain);
